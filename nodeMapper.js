@@ -1,5 +1,5 @@
-
 const { Rectangle, Text, Artboard, Group, Color } = require("scenegraph")
+const { findArtboardInParent } = require("./scenegraphUtils.js");
 
 const addMappedNodeRecursive = (target, nodeMap) => {
     if (!target.name.includes("@ignore") && target.visible) {
@@ -30,16 +30,6 @@ const mapScreen = (artboard) => {
     var result = {}
     addMappedNodeRecursive(artboard, result);
     return result;
-}
-
-const findArtboardInParent = (node) => {
-    var target = node;
-    while (target != null) {
-        if (target instanceof Artboard)
-            return target;
-        target = target.parent;
-    }
-    return null;
 }
 
 const mapNode = (node) => {
