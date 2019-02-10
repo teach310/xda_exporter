@@ -17,3 +17,6 @@ edit later
 # Unity
 you can use xda by unity.
 https://github.com/teach310/Xd2uGUI
+
+# License
+This library is under the MIT License.
