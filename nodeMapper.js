@@ -3,6 +3,10 @@ const {
     Text, 
     Artboard, 
     Ellipse,
+    Line,
+    Path,
+    SymbolInstance,
+    LinkedGraphic,
     Color
 } = require("scenegraph")
 const { findArtboardInParent } = require("./scenegraphUtils.js");
@@ -58,6 +62,14 @@ const mapNode = (node) => {
         return mapArtboard(node);
     }else if(node instanceof Ellipse){
         return mapEllipse(node);
+    }else if(node instanceof Line){
+        return mapLine(node);
+    }else if(node instanceof Path){
+        return mapPath(node);
+    }else if(node instanceof SymbolInstance){
+        return mapSymbolInstance(node);
+    }else if(node instanceof LinkedGraphic){
+        return mapLinkedGraphic(node);
     } else {
         return mapGroup(node);
     }
@@ -138,6 +150,74 @@ const mapEllipse = (ellipse) => {
         "color": getGraphicNodeColor(ellipse),
         "radiusX": ellipse.radiusX,
         "radiusY": ellipse.radiusY
+    }
+}
+
+const mapLine = (line) => {
+    let artboard = findArtboardInParent(line);
+    return {
+        "guid": line.guid,
+        "component": "Line",
+        "name": line.name,
+        "parentGuid": line.parent.guid,
+        "siblingIndex" : getSiblingIndex(line),
+        "artboardPosX": line.globalBounds.x - artboard.globalBounds.x,
+        "artboardPosY": line.globalBounds.y - artboard.globalBounds.y,
+        "width": line.globalBounds.width,
+        "height": line.globalBounds.height,
+        "color": line.stroke ? line.stroke.toHex(true) : "FFF",
+        "lineWidth" : line.strokeWidth,
+        "startPosX": line.start ? line.start.x : 0,
+        "startPosY": line.start ? line.start.y : 0,
+        "endPosX" : line.end ? line.end.x : 0,
+        "endPosY" : line.end ? line.end.y : 0,
+    }
+}
+
+const mapPath = (path) => {
+    let artboard = findArtboardInParent(path);
+    return {
+        "guid": path.guid,
+        "component": "Path",
+        "name": path.name,
+        "parentGuid": path.parent.guid,
+        "siblingIndex" : getSiblingIndex(path),
+        "artboardPosX": path.globalBounds.x - artboard.globalBounds.x,
+        "artboardPosY": path.globalBounds.y - artboard.globalBounds.y,
+        "width": path.globalBounds.width,
+        "height": path.globalBounds.height,
+        "color": getGraphicNodeColor(path),
+        "pathData": path.pathData
+    }
+}
+
+const mapSymbolInstance = (symbol) => {
+    let artboard = findArtboardInParent(symbol);
+    return {
+        "guid": symbol.guid,
+        "component": "SymbolInstance",
+        "name": symbol.name,
+        "parentGuid": symbol.parent.guid,
+        "siblingIndex" : getSiblingIndex(symbol),
+        "artboardPosX": symbol.globalBounds.x - artboard.globalBounds.x,
+        "artboardPosY": symbol.globalBounds.y - artboard.globalBounds.y,
+        "width": symbol.globalBounds.width,
+        "height": symbol.globalBounds.height, 
+    }
+}
+
+const mapLinkedGraphic = (linkedGraphic) => {
+    let artboard = findArtboardInParent(linkedGraphic);
+    return {
+        "guid": linkedGraphic.guid,
+        "component": "LinkedGraphic",
+        "name": linkedGraphic.name,
+        "parentGuid": linkedGraphic.parent.guid,
+        "siblingIndex" : getSiblingIndex(linkedGraphic),
+        "artboardPosX": linkedGraphic.globalBounds.x - artboard.globalBounds.x,
+        "artboardPosY": linkedGraphic.globalBounds.y - artboard.globalBounds.y,
+        "width": linkedGraphic.globalBounds.width,
+        "height": linkedGraphic.globalBounds.height, 
     }
 }
 
