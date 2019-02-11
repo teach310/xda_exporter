@@ -1,4 +1,10 @@
-const { Rectangle, Text, Artboard, Group, Color } = require("scenegraph")
+const { 
+    Rectangle,
+    Text, 
+    Artboard, 
+    Ellipse,
+    Color
+} = require("scenegraph")
 const { findArtboardInParent } = require("./scenegraphUtils.js");
 
 const addMappedNodeRecursive = (target, nodeMap) => {
@@ -20,7 +26,18 @@ const addMappedNodeRecursive = (target, nodeMap) => {
 
 // 頭文字を小文字にする
 const toLowerCaseAtHead = (p) => {
+    if(!p)
+        return p;   
+
     return p.charAt(0).toLowerCase() + p.slice(1);
+}
+
+const getGraphicNodeColor = (graphicNode) => {
+    if (graphicNode.fill instanceof Color) {
+        return graphicNode.fill.toHex(true);
+    } else {
+        return "#FFF";
+    }
 }
 
 const mapScreen = (artboard) => {
@@ -37,12 +54,12 @@ const mapNode = (node) => {
         return mapRectangle(node);
     } else if (node instanceof Text) {
         return mapText(node);
-    } else if (node instanceof Group) {
-        return mapGroup(node);
     } else if (node instanceof Artboard) {
         return mapArtboard(node);
+    }else if(node instanceof Ellipse){
+        return mapEllipse(node);
     } else {
-        return node;
+        return mapGroup(node);
     }
 }
 
@@ -58,17 +75,11 @@ const mapRectangle = (rectangle) => {
         "artboardPosY": rectangle.globalBounds.y - artboard.globalBounds.y,
         "width": rectangle.width,
         "height": rectangle.height,
-        "color": getRectColor(rectangle),
+        "color": getGraphicNodeColor(rectangle),
     }
 }
 
-const getRectColor = (rectangle) => {
-    if (rectangle.fill instanceof Color) {
-        return rectangle.fill.toHex(true);
-    } else {
-        return "#FFF";
-    }
-}
+
 
 const mapText = (text) => {
     let artboard = findArtboardInParent(text);
@@ -109,6 +120,24 @@ const mapArtboard = (artboard) => {
         "name": artboard.name,
         "width": artboard.width,
         "height": artboard.height
+    }
+}
+
+const mapEllipse = (ellipse) => {
+    let artboard = findArtboardInParent(ellipse);
+    return {
+        "guid": ellipse.guid,
+        "component": "Ellipse",
+        "name": ellipse.name,
+        "parentGuid": ellipse.parent.guid,
+        "siblingIndex" : getSiblingIndex(ellipse),
+        "artboardPosX": ellipse.globalBounds.x - artboard.globalBounds.x,
+        "artboardPosY": ellipse.globalBounds.y - artboard.globalBounds.y,
+        "width": ellipse.globalBounds.width,
+        "height": ellipse.globalBounds.height,
+        "color": getGraphicNodeColor(ellipse),
+        "radiusX": ellipse.radiusX,
+        "radiusY": ellipse.radiusY
     }
 }
 
