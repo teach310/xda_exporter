@@ -18,5 +18,15 @@ edit later
 you can use xda by unity.
 https://github.com/teach310/Xd2uGUI
 
+# ReleaseNotes
+
+## 1.0.1
+Map all node type.
+Export artboards
+
+## 1.0.0
+Export artboard as xda.
+Map Rectangle, Artboard, Text, Group
+
 # License
 This library is under the MIT License.
