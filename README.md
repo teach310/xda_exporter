@@ -1,3 +1,8 @@
+# Install
+![2019-02-11 21 22 56](https://user-images.githubusercontent.com/16421323/52713319-565fb680-2fda-11e9-9e86-a9f812365794.jpg)
+
+You can install plugin from the XD plugin manager. 
+
 # xda_exporter
 export AdobeXd artboard as xda file
 
